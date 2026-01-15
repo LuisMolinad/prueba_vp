@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 function App() {
   const [count, setCount] = useState(0)
-
+  //comentario de prueba
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-8">
       <div className="flex gap-8 mb-8">
