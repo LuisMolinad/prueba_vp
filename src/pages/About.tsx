@@ -1,0 +1,57 @@
+export function About() {
+  return (
+    <div className="min-h-[calc(100vh-180px)] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          Acerca de FilterApp
+        </h1>
+
+        <div className="space-y-6">
+          <section className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+            <h2 className="text-2xl font-semibold mb-3 text-purple-300">¿Qué es FilterApp?</h2>
+            <p className="text-gray-300 leading-relaxed">
+              FilterApp es una aplicación moderna construida con React, React Router y Tailwind CSS.
+              Proporciona herramientas poderosas para filtrar y buscar información en tiempo real de manera
+              eficiente y con una interfaz hermosa.
+            </p>
+          </section>
+
+          <section className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+            <h2 className="text-2xl font-semibold mb-3 text-pink-300">Características</h2>
+            <ul className="space-y-2 text-gray-300">
+              <li className="flex items-center gap-2">
+                <span className="text-purple-400">✓</span> Búsqueda en tiempo real
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-purple-400">✓</span> Filtrado por múltiples campos
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-purple-400">✓</span> Componentes reutilizables
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-purple-400">✓</span> Navegación fluida con React Router
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-purple-400">✓</span> Diseño responsive con Tailwind
+              </li>
+            </ul>
+          </section>
+
+          <section className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+            <h2 className="text-2xl font-semibold mb-3 text-cyan-300">Tecnologías</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {['React 19', 'TypeScript', 'Tailwind CSS', 'React Router', 'Vite', 'Zustand'].map((tech) => (
+                <div
+                  key={tech}
+                  className="bg-slate-700 rounded px-4 py-2 text-center text-cyan-300 border border-cyan-600 hover:bg-cyan-900 transition-colors"
+                >
+                  {tech}
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  )
+}
