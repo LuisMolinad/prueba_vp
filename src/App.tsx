@@ -16,7 +16,6 @@ function AppContent() {
       <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white transition-colors duration-300">
         <Navbar />
 
-        {/* Routes */}
         <main className="flex-1">
           <Routes>
             <Route path="/login" element={<Login />} />

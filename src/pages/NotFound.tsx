@@ -8,7 +8,6 @@ export function NotFound() {
     <div className={theme === 'dark' ? 'dark' : ''}>
       <div className="min-h-[calc(100vh-180px)] bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-6">
         <div className="max-w-2xl w-full text-center">
-          {/* 404 Number */}
           <div className="mb-8">
             <h1 className="text-9xl font-black bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent">
               404
@@ -16,7 +15,6 @@ export function NotFound() {
             <div className="w-24 h-1 bg-gradient-to-r from-red-500 to-orange-500 mx-auto mt-4"></div>
           </div>
 
-          {/* Message */}
           <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
             Oops, página no encontrada
           </h2>
@@ -25,7 +23,6 @@ export function NotFound() {
             movida o escribiste mal la URL.
           </p>
 
-          {/* Suggestions */}
           <div className="bg-slate-100 dark:bg-slate-800 rounded-lg p-8 border border-slate-200 dark:border-slate-700 mb-8">
             <h3 className="text-xl font-semibold text-blue-600 dark:text-blue-300 mb-4">Aquí hay algunas opciones:</h3>
             <ul className="space-y-3 text-gray-700 dark:text-gray-300 text-left">
@@ -41,7 +38,6 @@ export function NotFound() {
             </ul>
           </div>
 
-          {/* Navigation Links */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/"
@@ -57,7 +53,6 @@ export function NotFound() {
             </Link>
           </div>
 
-          {/* Fun Easter Egg */}
           <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">
             <p className="text-gray-600 dark:text-gray-500 text-sm">
               Error Code: <span className="text-gray-700 dark:text-gray-400 font-mono">404_PAGE_NOT_FOUND</span>

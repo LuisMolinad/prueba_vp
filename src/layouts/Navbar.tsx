@@ -9,7 +9,6 @@ export function Navbar() {
     <nav className="sticky top-0 z-50 shadow-lg border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
           <Link
             to="/"
             className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent hover:from-blue-300 hover:to-cyan-300 transition-all"
@@ -17,7 +16,6 @@ export function Navbar() {
             FilterApp
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-4 lg:gap-6">
             <Link
               to="/"
@@ -44,13 +42,11 @@ export function Navbar() {
               Login
             </Link>
             
-            {/* Theme Toggle Desktop */}
             <div className="ml-2 lg:ml-4 border-l border-slate-300 dark:border-slate-700 pl-2 lg:pl-4">
               <ThemeToggle />
             </div>
           </div>
 
-          {/* Mobile menu button & theme toggle */}
           <div className="flex md:hidden items-center gap-3">
             <ThemeToggle />
             <button
@@ -59,7 +55,6 @@ export function Navbar() {
               aria-expanded="false"
             >
               <span className="sr-only">Abrir menú</span>
-              {/* Icon */}
               {!isMenuOpen ? (
                 <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -74,7 +69,6 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden border-t border-slate-200 dark:border-slate-700">
           <div className="px-2 pt-2 pb-3 space-y-1">

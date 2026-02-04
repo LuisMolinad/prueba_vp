@@ -4,7 +4,6 @@ import { z } from 'zod';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// 1. ESQUEMA DE VALIDACIÓN CON ZOD
 const loginSchema = z.object({
   email: z
     .string()
@@ -16,7 +15,6 @@ const loginSchema = z.object({
     .max(50, 'La contraseña no puede exceder 50 caracteres'),
 });
 
-// 2. TIPO INFERIDO DEL ESQUEMA
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export function Login() {
@@ -24,32 +22,25 @@ export function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
 
-  // 3. CONFIGURAR REACT HOOK FORM CON ZOD
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    mode: 'onChange', // Valida en tiempo real
+    mode: 'onChange',
   });
 
-  // 4. FUNCIÓN DE LOGIN (DEMO)
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     setLoginError(null);
 
     try {
-      // Simulación de llamada API con delay
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      // Credenciales demo
       if (data.email === 'demo@demo.com' && data.password === 'demo123') {
-        // Guardar token demo en localStorage
         localStorage.setItem('authToken', 'demo-token-12345');
         localStorage.setItem('user', JSON.stringify({ email: data.email, name: 'Usuario Demo' }));
-        
-        // Redirigir al dashboard
         navigate('/dashboard');
       } else {
         setLoginError('Credenciales incorrectas. Usa: demo@demo.com / demo123');
@@ -64,7 +55,6 @@ export function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
       <div className="max-w-md w-full space-y-8">
-        {/* Header */}
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
             Iniciar Sesión
@@ -74,10 +64,8 @@ export function Login() {
           </p>
         </div>
 
-        {/* Formulario */}
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
           <div className="rounded-md shadow-sm space-y-4">
-            {/* Campo Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Email
@@ -99,7 +87,6 @@ export function Login() {
               )}
             </div>
 
-            {/* Campo Password */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Contraseña
@@ -122,7 +109,6 @@ export function Login() {
             </div>
           </div>
 
-          {/* Error de Login */}
           {loginError && (
             <div className="rounded-md bg-red-50 dark:bg-red-900/20 p-4">
               <p className="text-sm text-red-800 dark:text-red-400">
@@ -131,7 +117,6 @@ export function Login() {
             </div>
           )}
 
-          {/* Botón Submit */}
           <button
             type="submit"
             disabled={!isValid || isLoading}

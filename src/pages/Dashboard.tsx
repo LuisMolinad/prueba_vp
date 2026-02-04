@@ -32,7 +32,6 @@ export function Dashboard() {
           <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-6 sm:mb-8">Filtra productos por nombre o categoría</p>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-            {/* Filtro */}
             <div className="lg:col-span-1 bg-slate-100 dark:bg-slate-800 rounded-lg p-4 sm:p-6 border border-slate-200 dark:border-slate-700 h-fit">
               <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-green-600 dark:text-green-300">Buscar Producto</h2>
               <FilterInput<Product>
@@ -50,7 +49,6 @@ export function Dashboard() {
               />
             </div>
 
-            {/* Contenido principal */}
             <div className="lg:col-span-2">
               {selectedProduct ? (
                 <div className="bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900 dark:to-slate-800 border border-green-300 dark:border-green-500 rounded-lg p-4 sm:p-6 lg:p-8 shadow-xl">
@@ -76,7 +74,6 @@ export function Dashboard() {
                 </div>
               )}
 
-              {/* Lista de productos */}
               <div className="mt-6 sm:mt-8">
                 <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-blue-600 dark:text-blue-300">Productos ({filteredProducts.length})</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
