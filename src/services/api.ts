@@ -1,5 +1,23 @@
-export const fetchAllCharacters = async () => {
-  const response = await fetch(`https://rickandmortyapi.com/api/character`) 
-  const data = await response.json()
-  return data
+const API_BASE_URL = import.meta.env.VITE_API_URL
+
+const fetchAPI = async ( options?: RequestInit) => {
+  const response = await fetch(API_BASE_URL, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+    ...options,
+  })
+
+  if (!response.ok) {
+    throw new Error(`Error: ${response.status} ${response.statusText}`)
+  }
+
+  return response.json()
+}
+
+export const getData = async () => { debugger
+  return fetchAPI( {
+    method: 'GET',
+  })
 }
