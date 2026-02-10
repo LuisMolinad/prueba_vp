@@ -17,6 +17,7 @@ export function Home() {
       })
   }, [])
 
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -24,11 +25,10 @@ export function Home() {
       </div>
     )
   }
-    debugger
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-        Bienvenido
+        Bienvenido 
       </h1>
       <p className="text-gray-600 dark:text-gray-400">
         Esta es tu página de inicio. Comienza a construir tu SPA aquí.

@@ -16,7 +16,7 @@ const fetchAPI = async ( options?: RequestInit) => {
   return response.json()
 }
 
-export const getData = async () => { debugger
+export const getData = async () => {
   return fetchAPI( {
     method: 'GET',
   })

@@ -1,67 +1,11 @@
-# React Base - SPA Template
+# React + TypeScript + Vite
 
-Plantilla base limpia para crear Single Page Applications con React, TypeScript, React Router y Tailwind CSS.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## 🚀 Stack Tecnológico
+Currently, two official plugins are available:
 
-- **React 19** - Biblioteca UI
-- **TypeScript** - Tipado estático
-- **Vite** - Build tool ultrarrápido
-- **React Router** - Enrutamiento
-- **Tailwind CSS** - Estilos utility-first
-- **Zustand** - Estado global (tema claro/oscuro)
-
-## 📦 Instalación
-
-```bash
-# Instalar dependencias
-npm install
-
-# Crear archivo .env (copia de .env.example)
-cp .env.example .env
-```
-
-## 🛠️ Comandos
-
-```bash
-# Desarrollo
-npm run dev
-
-# Build
-npm run build
-
-# Preview del build
-npm run preview
-
-# Linting
-npm run lint
-```
-
-## 📁 Estructura del Proyecto
-
-```
-src/
-├── components/     # Componentes reutilizables
-│   ├── Button.tsx
-│   └── ThemeToggle.tsx
-├── layouts/        # Layouts (Navbar, Footer)
-├── pages/          # Páginas/Rutas
-├── services/       # Servicios API
-│   └── api.ts     # Configuración base de API
-├── store/          # Estado global (Zustand)
-├── types/          # Tipos TypeScript
-└── utils/          # Utilidades
-```
-
-## 🔌 Configuración de API
-
-1. Copia `.env.example` a `.env`
-2. Configura `VITE_API_URL` con tu endpoint
-3. Usa las funciones en `src/services/api.ts`
-
-## 🎨 Tema Claro/Oscuro
-
-El proyecto incluye soporte para tema claro/oscuro usando Zustand y Tailwind CSS. El tema se persiste en localStorage.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 ## React Compiler
 
