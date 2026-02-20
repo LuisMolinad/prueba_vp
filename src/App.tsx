@@ -6,7 +6,7 @@ import { Dashboard } from './pages/Dashboard'
 import { NotFound } from './pages/NotFound'
 import { Login } from './pages/Login'
 import { Navbar } from './layouts/Navbar'
-import { Footer } from './layouts/Footer'
+import { Footer } from './layouts/footer'
 
 function AppContent() {
   const { theme } = useThemeStore()
