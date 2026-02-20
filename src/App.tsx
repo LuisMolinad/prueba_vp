@@ -4,6 +4,7 @@ import { Home } from './pages/Home'
 import { NotFound } from './pages/NotFound'
 import { Navbar } from './layouts/Navbar'
 import { Footer } from './layouts/Footer'
+import { DynamicForm } from './components/DynamicForm'
 
 function AppContent() {
   const { theme } = useThemeStore()
@@ -16,6 +17,7 @@ function AppContent() {
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/formulario" element={<DynamicForm />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

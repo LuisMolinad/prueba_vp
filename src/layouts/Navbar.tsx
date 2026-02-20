@@ -20,6 +20,12 @@ export function Navbar() {
             >
               Inicio
             </Link>
+            <Link
+              to="/formulario"
+              className="transition-colors px-3 py-2 rounded text-gray-700 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-900 dark:hover:bg-white hover:bg-opacity-20"
+            >
+              Formulario
+            </Link>
             
             <div className="border-l border-slate-300 dark:border-slate-700 pl-4">
               <ThemeToggle />
