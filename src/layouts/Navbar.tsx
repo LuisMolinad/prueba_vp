@@ -10,7 +10,7 @@ export function Navbar() {
             to="/"
             className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent hover:from-blue-300 hover:to-cyan-300 transition-all"
           >
-            Mi App
+            React Base
           </Link>
 
           <div className="flex items-center gap-4">
@@ -24,7 +24,13 @@ export function Navbar() {
               to="/formulario"
               className="transition-colors px-3 py-2 rounded text-gray-700 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-900 dark:hover:bg-white hover:bg-opacity-20"
             >
-              Formulario
+              Validaciones
+            </Link>
+            <Link
+              to="/about"
+              className="transition-colors px-3 py-2 rounded text-gray-700 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-900 dark:hover:bg-white hover:bg-opacity-20"
+            >
+              Base
             </Link>
             
             <div className="border-l border-slate-300 dark:border-slate-700 pl-4">

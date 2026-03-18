@@ -1,21 +1,37 @@
-// Información de la aplicación
-export interface AppInfo {
-  name: string
-  version: string
-  environment: string
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+
+export interface ApiError {
+  status: number
+  message: string
 }
 
-// Configuración del formulario
-export interface FormConfig {
-  id: string
-  title: string
-  description: string
-  method: 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE'
-  submitUrl: string
-  submitText: string
+export interface ApiRequestConfig {
+  endpoint: string
+  method?: HttpMethod
+  body?: unknown
+  headers?: HeadersInit
 }
 
-// Validaciones de campos
+export type EndpointPayload = Record<string, unknown> | unknown[] | null
+
+export interface EndpointState {
+  data: EndpointPayload
+  isLoading: boolean
+  error: string | null
+}
+
+export type FieldType =
+  | 'text'
+  | 'email'
+  | 'password'
+  | 'checkbox'
+  | 'number'
+  | 'tel'
+  | 'url'
+  | 'date'
+
+export type FormValues = Record<string, string | boolean>
+
 export interface FieldValidations {
   minLength?: number
   maxLength?: number
@@ -24,8 +40,7 @@ export interface FieldValidations {
   hasUppercase?: boolean
 }
 
-// Mensajes de error
-export interface ErrorMessages {
+export interface FieldMessages {
   required?: string
   minLength?: string
   maxLength?: string
@@ -35,48 +50,21 @@ export interface ErrorMessages {
   matchWith?: string
 }
 
-// Campo del formulario
-export interface FormField {
+export interface FieldConfig {
   name: string
   label: string
-  type: 'text' | 'email' | 'password' | 'checkbox' | 'number' | 'tel' | 'url' | 'date'
+  type: FieldType
   placeholder?: string
-  required: boolean
-  defaultValue?: string | boolean | number
+  required?: boolean
+  defaultValue?: string | boolean
   validations?: FieldValidations
-  errorMessages: ErrorMessages
+  messages?: FieldMessages
   matchWith?: string
 }
 
-// Configuración de UI
-export interface UIConfig {
-  layout: 'vertical' | 'horizontal'
-  theme: 'light' | 'dark'
-  showRequiredAsterisk: boolean
-}
+export type CustomValidator = (
+  value: string | boolean,
+  allValues: FormValues
+) => string | null
 
-// Respuestas del servidor
-export interface SuccessResponse {
-  status: number
-  message: string
-}
-
-export interface ErrorResponse {
-  status: number
-  message: string
-  errors?: Record<string, string[]>
-}
-
-export interface ResponseConfig {
-  success: SuccessResponse
-  error: ErrorResponse
-}
-
-// Interfaz principal que recibe la API
-export interface FormAPIResponse {
-  app: AppInfo
-  form: FormConfig
-  fields: FormField[]
-  ui: UIConfig
-  responses: ResponseConfig
-}
+export type CustomValidatorMap = Record<string, CustomValidator[]>

@@ -1,50 +1,72 @@
-import type { FormAPIResponse } from '../types/type'
-import { useFormConfigStore } from '../store/store'
+import type { ApiError, ApiRequestConfig, EndpointPayload } from '../types/type'
+import envConfig from '../../env-config.ts'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL
+const API_BASE_URL = envConfig.apiUrl
 
-const fetchAPI = async <T = unknown>(options?: RequestInit): Promise<T> => {
-  const response = await fetch(API_BASE_URL, {
+const isAbsoluteUrl = (value: string) => /^https?:\/\//i.test(value)
+
+const buildUrl = (endpoint: string): string => {
+  if (isAbsoluteUrl(endpoint)) return endpoint
+
+  const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`
+
+  if (!API_BASE_URL) return normalizedEndpoint
+
+  return `${API_BASE_URL.replace(/\/$/, '')}${normalizedEndpoint}`
+}
+
+export const requestJson = async <T = EndpointPayload>({
+  endpoint,
+  method = 'GET',
+  body,
+  headers,
+}: ApiRequestConfig): Promise<T> => {
+  const response = await fetch(buildUrl(endpoint), {
+    method,
     headers: {
       'Content-Type': 'application/json',
-      ...options?.headers,
+      ...headers,
     },
-    ...options,
+    body: body !== undefined ? JSON.stringify(body) : undefined,
   })
 
   if (!response.ok) {
-    throw new Error(`Error: ${response.status} ${response.statusText}`)
+    let message = `${response.status} ${response.statusText}`
+
+    try {
+      const errorData = (await response.json()) as { message?: string }
+      if (errorData.message) {
+        message = errorData.message
+      }
+    } catch {
+      // Keep default message when response body is not JSON.
+    }
+
+    const apiError: ApiError = {
+      status: response.status,
+      message,
+    }
+
+    throw apiError
   }
 
-  return response.json()
+  return response.json() as Promise<T>
 }
 
-export const getData = async (): Promise<FormAPIResponse> => {
-  return fetchAPI<FormAPIResponse>({
+export const getEndpointData = async (endpoint = '/'): Promise<EndpointPayload> => {
+  return requestJson<EndpointPayload>({
+    endpoint,
     method: 'GET',
   })
 }
 
-export const submitFormData = async (data: Record<string, unknown>): Promise<{ status: number; message: string }> => {
-  return fetchAPI<{ status: number; message: string }>({
+export const postEndpointData = async (
+  endpoint: string,
+  data: Record<string, unknown>
+): Promise<EndpointPayload> => {
+  return requestJson<EndpointPayload>({
+    endpoint,
     method: 'POST',
-    body: JSON.stringify(data),
+    body: data,
   })
-}
-
-// Función helper para cargar la configuración del formulario y almacenarla en el store
-export const loadFormConfig = async (): Promise<void> => {
-  const { setLoading, setFormConfig, setError } = useFormConfigStore.getState()
-  
-  try {
-    setLoading(true)
-    const config = await getData()
-    setFormConfig(config)
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Error al cargar la configuración'
-    setError(errorMessage)
-    throw error
-  } finally {
-    setLoading(false)
-  }
 }

@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { useThemeStore } from './store/store'
 import { Home } from './pages/Home'
+import { About } from './pages/About'
 import { NotFound } from './pages/NotFound'
 import { Navbar } from './layouts/Navbar'
 import { Footer } from './layouts/Footer'
@@ -17,6 +18,7 @@ function AppContent() {
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
             <Route path="/formulario" element={<DynamicForm />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

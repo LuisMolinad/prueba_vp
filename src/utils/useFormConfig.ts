@@ -1,32 +1,34 @@
-import { useEffect } from 'react'
-import { useFormConfigStore } from '../store/store'
-import { loadFormConfig } from '../services/api'
+import { useCallback, useState } from 'react'
+import { getEndpointData } from '../services/api'
+import type { EndpointPayload, EndpointState } from '../types/type'
 
-/**
- * Hook personalizado para manejar la configuración del formulario desde la API
- * @param autoLoad - Si es true, carga automáticamente la configuración al montar el componente
- */
-export const useFormConfig = (autoLoad = false) => {
-  const { formConfig, isLoading, error, setFormConfig, setLoading, setError, clearFormConfig } = useFormConfigStore()
+export const useEndpointData = (endpoint: string) => {
+  const [state, setState] = useState<EndpointState>({
+    data: null,
+    isLoading: false,
+    error: null,
+  })
 
-  useEffect(() => {
-    if (autoLoad && !formConfig) {
-      loadFormConfig().catch(console.error)
+  const load = useCallback(async (): Promise<EndpointPayload> => {
+    setState((prev) => ({ ...prev, isLoading: true, error: null }))
+
+    try {
+      const data = await getEndpointData(endpoint)
+      setState({ data, isLoading: false, error: null })
+      return data
+    } catch (error) {
+      const message =
+        typeof error === 'object' && error !== null && 'message' in error
+          ? String(error.message)
+          : 'No fue posible obtener datos del endpoint'
+
+      setState((prev) => ({ ...prev, isLoading: false, error: message }))
+      throw error
     }
-  }, [autoLoad, formConfig])
-
-  const refresh = async () => {
-    await loadFormConfig()
-  }
+  }, [endpoint])
 
   return {
-    formConfig,
-    isLoading,
-    error,
-    setFormConfig,
-    setLoading,
-    setError,
-    clearFormConfig,
-    refresh,
+    ...state,
+    load,
   }
 }
