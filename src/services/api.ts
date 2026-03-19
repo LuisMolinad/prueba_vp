@@ -39,7 +39,6 @@ export const requestJson = async <T = EndpointPayload>({
         message = errorData.message
       }
     } catch {
-      // Keep default message when response body is not JSON.
     }
 
     const apiError: ApiError = {
