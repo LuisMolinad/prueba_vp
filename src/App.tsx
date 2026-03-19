@@ -9,7 +9,8 @@ import { DynamicForm } from './components/DynamicForm'
 
 function AppContent() {
   const { theme } = useThemeStore()
-
+ 
+  
   return (
     <div className={theme === 'dark' ? 'dark' : ''}>
       <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white transition-colors duration-300 flex flex-col">
