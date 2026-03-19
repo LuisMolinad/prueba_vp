@@ -86,19 +86,19 @@ export const DynamicForm = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
+    <div className="max-w-2xl mx-auto px-3 md:px-4 py-8">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
+        <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100">
           Base de Validaciones
         </h1>
-        <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">
+        <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 mt-2">
           Las reglas viven en frontend y no dependen de la respuesta del endpoint.
         </p>
       </div>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-6"
+        className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-4 md:p-6"
       >
         {formFields.map((field) => {
           const fieldError = errors[field.name]?.message
@@ -109,7 +109,7 @@ export const DynamicForm = () => {
                 <label className="inline-flex items-start gap-2 text-sm">
                   <input
                     type="checkbox"
-                    className="mt-0.5 h-4 w-4 rounded border-slate-300"
+                    className="mt-0.5 h-4 w-4 rounded border-slate-300 dark:border-slate-600"
                     {...register(field.name)}
                   />
                   <span>
@@ -126,7 +126,7 @@ export const DynamicForm = () => {
 
           return (
             <div key={field.name} className="mb-5">
-              <label htmlFor={field.name} className="block text-sm font-medium mb-2">
+              <label htmlFor={field.name} className="block text-sm md:text-base font-medium mb-2">
                 {field.label}
                 {field.required && <span className="text-red-500 ml-1">*</span>}
               </label>
@@ -134,7 +134,7 @@ export const DynamicForm = () => {
                 id={field.name}
                 type={field.type}
                 placeholder={field.placeholder}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:text-slate-100 ${
+                className={`w-full px-3 py-2 md:py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 dark:bg-slate-700 dark:text-slate-100 ${
                   fieldError
                     ? 'border-red-500 dark:border-red-500'
                     : 'border-slate-300 dark:border-slate-600'
