@@ -1,2 +1,10 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
+input::placeholder {
+  @apply text-slate-400;
+}
+
+.dark input::placeholder {
+  @apply text-slate-500;
+}

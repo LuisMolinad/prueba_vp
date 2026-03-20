@@ -1,24 +1,26 @@
-import { useEffect, useState } from 'react'
-import { useEndpointData } from '../utils/useFormConfig'
+import { useEffect } from 'react'
+import { useApiContentStore } from '../store/store'
 
 export function Home() {
-  const [endpoint, setEndpoint] = useState('/')
-  const { data, isLoading, error, load } = useEndpointData(endpoint)
+  const data = useApiContentStore((state) => state.data)
+  const isLoading = useApiContentStore((state) => state.isLoading)
+  const error = useApiContentStore((state) => state.error)
+  const fetchContent = useApiContentStore((state) => state.fetchContent)
 
   useEffect(() => {
-    load().catch(() => {
-      // El mensaje de error se expone desde el hook.
+    fetchContent().catch(() => {
+      // El mensaje de error se expone en el store global.
     })
-  }, [load])
+  }, [fetchContent])
 
   const handleRefresh = async () => {
-    await load()
+    await fetchContent()
   }
 
   return (
-    <section className="max-w-6xl mx-auto px-4 py-8 space-y-6">
+    <section className="max-w-6xl mx-auto px-3 md:px-4 lg:px-6 py-8 space-y-6">
       <header className="space-y-2">
-        <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
+        <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
           Starter API + Validaciones
         </h1>
         <p className="text-slate-600 dark:text-slate-300 max-w-2xl">
@@ -27,15 +29,12 @@ export function Home() {
         </p>
       </header>
 
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
+      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 md:p-5 shadow-sm">
         <h2 className="font-semibold text-lg mb-3">Prueba de endpoint</h2>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <input
-            value={endpoint}
-            onChange={(event) => setEndpoint(event.target.value)}
-            className="flex-1 border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 dark:bg-slate-700"
-            placeholder="/users o https://api.ejemplo.com/users"
-          />
+        <div className="flex flex-col md:flex-row gap-2 md:gap-3 items-start md:items-center">
+          <p className="text-sm md:text-base text-slate-600 dark:text-slate-300">
+            Consultando endpoint configurado en env-config.ts
+          </p>
           <button
             onClick={handleRefresh}
             disabled={isLoading}
@@ -50,10 +49,10 @@ export function Home() {
         )}
 
         <div className="mt-4">
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">
+          <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 mb-2">
             Respuesta cruda del endpoint
           </p>
-          <pre className="text-xs sm:text-sm bg-slate-950 text-slate-100 p-4 rounded-lg overflow-auto max-h-80">
+          <pre className="text-xs sm:text-sm bg-slate-950 text-slate-100 p-3 md:p-4 rounded-lg overflow-auto max-h-80">
             {JSON.stringify(data, null, 2)}
           </pre>
         </div>
