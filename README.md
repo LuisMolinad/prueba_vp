@@ -68,3 +68,4 @@ npm run build
 ```
 
 El resultado queda en la carpeta `dist/`.
+
