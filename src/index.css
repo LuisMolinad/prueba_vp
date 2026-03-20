@@ -8,3 +8,12 @@ input::placeholder {
 .dark input::placeholder {
   @apply text-slate-500;
 }
+
+@theme {
+  --color-lm-blue: #003087;
+  --color-lm-blue-2: #0b4dbb;
+  --color-lm-blue-3: #eaf1fb;
+  --color-av-red: #d71920;
+  --color-av-red-dark: #b31218;
+  --color-bgFooter: #0b1733;
+}

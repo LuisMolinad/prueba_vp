@@ -1,58 +1,120 @@
-import { Link } from 'react-router-dom'
-import { useState } from 'react'
-import { ThemeToggle } from '../components/ThemeToggle'
+import { Link, useNavigate } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { getMenuEndpointData } from '../services/api'
+import type {
+  Action,
+  Navigation,
+  Root as MenuResponse,
+} from '../types/menuData'
 
 export function Navbar() {
+  const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
+  const [brandLogoText, setBrandLogoText] = useState('CW')
+  const [brandName, setBrandName] = useState('Club Website')
+  const [brandUrl, setBrandUrl] = useState('/')
+  const [navigation, setNavigation] = useState<Navigation[]>([])
+  const [actions, setActions] = useState<Action[]>([])
 
   const toggleMenu = () => setIsOpen(!isOpen)
   const closeMenu = () => setIsOpen(false)
 
-  const navLinks = [
-    { href: '/', label: 'Inicio' },
-    { href: '/formulario', label: 'Validaciones' },
-    { href: '/about', label: 'Base' },
-  ]
+  useEffect(() => {
+    const fetchMenu = async () => {
+      try {
+        const response = await getMenuEndpointData<MenuResponse>()
+        setBrandLogoText(response?.data?.brand?.logoText || 'CW')
+        setBrandName(response?.data?.brand?.name || 'Club Website')
+        setBrandUrl(response?.data?.brand?.url || '/')
+        setNavigation(response?.data?.navigation || [])
+        setActions(response?.data?.actions || [])
+      } catch {
+        setBrandLogoText('CW')
+        setBrandName('Club Website')
+        setBrandUrl('/')
+        setNavigation([])
+        setActions([])
+      }
+    }
+
+    fetchMenu().catch(() => {})
+  }, [])
+
+  const visibleNavigation = useMemo(
+    () => navigation.filter((item) => item.visible).sort((a, b) => a.order - b.order),
+    [navigation]
+  )
+
+  const visibleActions = useMemo(
+    () => actions.filter((item) => item.visible).sort((a, b) => a.order - b.order),
+    [actions]
+  )
+
+  const normalizeMenuHref = (href: string) => {
+    if (href === '/') return '/home'
+    if (href.startsWith('#')) return `/home${href}`
+    return href
+  }
+
+  const handleAction = (action: Action) => {
+    closeMenu()
+
+    if (action.action === 'logout') {
+      navigate('/login')
+    }
+  }
 
   return (
-    <nav className="sticky top-0 z-50 shadow-lg border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-3 md:px-6">
-        <div className="flex justify-between items-center h-16">
+    <nav className="sticky top-0 z-50 border-b border-slate-200 bg-slate-50/95 backdrop-blur-sm">
+      <div className="max-w-[1240px] mx-auto px-4 md:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link
-            to="/"
-            className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent hover:from-blue-300 hover:to-cyan-300 transition-all"
+            to={normalizeMenuHref(brandUrl)}
+            className="flex items-center gap-3"
             onClick={closeMenu}
           >
-            React Base
+            <span className="h-11 w-11 rounded-[16px] bg-gradient-to-br from-indigo-700 to-red-600 text-white font-bold text-xl flex items-center justify-center shadow">
+              {brandLogoText}
+            </span>
+            <span className="leading-tight">
+              <span className="text-xl font-bold  md:text-[34px] font-bold text-lm-blue">{brandName}</span>
+{/*               <span className="block text-[13px] md:text-[20px] text-slate-600">{brandSubtitle}</span> */}
+            </span>
           </Link>
 
           {/* Desktop  */}
-          <div className="hidden md:flex items-center gap-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className="transition-colors px-3 py-2 rounded text-gray-700 dark:text-gray-300 hover:text-white dark:hover:text-slate-900 hover:bg-slate-900 dark:hover:bg-white hover:bg-opacity-20"
+          <div className="hidden md:flex items-center gap-2 lg:gap-4">
+            {visibleNavigation.map((link) => (
+              <a
+                key={link.id}
+                href={normalizeMenuHref(link.href)}
+                className="px-2 lg:px-3 py-2 rounded-full text-[14px] lg:text-[16px] font-semibold text-slate-800 hover:text-av-red transition-colors"
               >
                 {link.label}
-              </Link>
+              </a>
             ))}
-            <div className="border-l border-slate-300 dark:border-slate-700 pl-4">
-              <ThemeToggle />
-            </div>
+            {visibleActions.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => handleAction(item)}
+                className="px-5 lg:px-6 h-11 rounded-full border border-lm-blue text-lm-blue text-[14px] lg:text-[16px] font-semibold hover:bg-lm-blue hover:text-white transition-colors"
+                type="button"
+              >
+                {item.label}
+              </button>
+            ))}
           </div>
 
-          {/* Menu Button + Theme Toggle */}
-          <div className="flex md:hidden items-center gap-3">
-            <ThemeToggle />
+          {/* Mobile Menu Button */}
+          <div className="flex md:hidden items-center">
             <button
               onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+              className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-slate-200 transition-colors"
               aria-label="Toggle menu"
             >
               <svg
-                className="h-6 w-6 text-gray-700 dark:text-gray-300"
+                className="h-6 w-6 text-slate-700"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -72,27 +134,37 @@ export function Navbar() {
       {isOpen && (
         <>
           {/* Overlay */}
-          <div
-            role="button"
-            tabIndex={0}
-            className="fixed inset-0 z-40 bg-black/30 dark:bg-black/50 md:hidden"
+          <button
+            type="button"
+            className="fixed inset-0 z-40 bg-black/30 md:hidden"
             onClick={closeMenu}
             onKeyDown={(e) => e.key === 'Escape' && closeMenu()}
             style={{ top: '64px' }}
+            aria-label="Cerrar men\u00fa"
           />
 
           {/* Sidebar */}
-          <div className="absolute left-0 right-0 top-16 z-40 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 md:hidden">
+          <div className="absolute left-0 right-0 top-16 z-40 bg-white border-b border-slate-200 md:hidden">
             <div className="px-3 py-2 space-y-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
+              {visibleNavigation.map((link) => (
+                <a
+                  key={link.id}
+                  href={link.href}
                   onClick={closeMenu}
-                  className="block px-3 py-2 rounded text-base font-medium text-gray-700 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                  className="block px-3 py-2 rounded text-base font-medium text-slate-700 hover:text-lm-blue hover:bg-slate-100 transition-colors"
                 >
                   {link.label}
-                </Link>
+                </a>
+              ))}
+              {visibleActions.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleAction(item)}
+                  type="button"
+                  className="w-full text-left px-3 py-2 rounded text-base font-medium border border-lm-blue text-lm-blue hover:bg-slate-100 transition-colors"
+                >
+                  {item.label}
+                </button>
               ))}
             </div>
           </div>

@@ -1,62 +1,61 @@
-import { useEffect } from 'react'
-import { useApiContentStore } from '../store/store'
+import { useEffect, useState } from 'react'
+import { getHomeContentEndpointData } from '../services/api'
+import type { HomeContentResponse } from '../types/homeContent'
+import { HeroSection } from '../components/home/HeroSection'
+import { BenefitsSection } from '../components/home/BenefitsSection'
+import { ExperienceSection } from '../components/home/ExperienceSection'
+import { ContactSection } from '../components/home/ContactSection'
 
 export function Home() {
-  const data = useApiContentStore((state) => state.data)
-  const isLoading = useApiContentStore((state) => state.isLoading)
-  const error = useApiContentStore((state) => state.error)
-  const fetchContent = useApiContentStore((state) => state.fetchContent)
+  const [data, setData] = useState<HomeContentResponse['data'] | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchContent().catch(() => {
-      // El mensaje de error se expone en el store global.
-    })
-  }, [fetchContent])
+    const fetchContent = async () => {
+      setIsLoading(true)
+      setError(null)
 
-  const handleRefresh = async () => {
-    await fetchContent()
+      try {
+        const response = await getHomeContentEndpointData<HomeContentResponse>()
+        setData(response.data)
+      } catch (err) {
+        const message =
+          typeof err === 'object' && err !== null && 'message' in err
+            ? String(err.message)
+            : 'No fue posible obtener el contenido de home.'
+
+        setError(message)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchContent().catch(() => {})
+  }, [])
+
+  if (isLoading) {
+    return (
+      <section className="max-w-6xl mx-auto px-4 py-12">
+        <p className="text-slate-600">Cargando contenido de Home...</p>
+      </section>
+    )
+  }
+
+  if (error || !data) {
+    return (
+      <section className="max-w-6xl mx-auto px-4 py-12">
+        <p className="text-red-600">Error: {error || 'No hay contenido disponible.'}</p>
+      </section>
+    )
   }
 
   return (
-    <section className="max-w-6xl mx-auto px-3 md:px-4 lg:px-6 py-8 space-y-6">
-      <header className="space-y-2">
-        <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
-          Starter API + Validaciones
-        </h1>
-        <p className="text-slate-600 dark:text-slate-300 max-w-2xl">
-          Plantilla lista para consumir endpoints de estructura desconocida y definir
-          validaciones en frontend con Zod.
-        </p>
-      </header>
-
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 md:p-5 shadow-sm">
-        <h2 className="font-semibold text-lg mb-3">Prueba de endpoint</h2>
-        <div className="flex flex-col md:flex-row gap-2 md:gap-3 items-start md:items-center">
-          <p className="text-sm md:text-base text-slate-600 dark:text-slate-300">
-            Consultando endpoint configurado en env-config.ts
-          </p>
-          <button
-            onClick={handleRefresh}
-            disabled={isLoading}
-            className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold px-4 py-2 rounded-lg"
-          >
-            {isLoading ? 'Consultando...' : 'Consultar'}
-          </button>
-        </div>
-
-        {error && (
-          <p className="text-red-600 dark:text-red-400 mt-3">Error: {error}</p>
-        )}
-
-        <div className="mt-4">
-          <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 mb-2">
-            Respuesta cruda del endpoint
-          </p>
-          <pre className="text-xs sm:text-sm bg-slate-950 text-slate-100 p-3 md:p-4 rounded-lg overflow-auto max-h-80">
-            {JSON.stringify(data, null, 2)}
-          </pre>
-        </div>
-      </div>
-    </section>
+    <div className="space-y-10 md:space-y-14 pb-10">
+      <HeroSection hero={data.hero} />
+      <BenefitsSection benefits={data.benefits} />
+      <ExperienceSection informationSection={data.informationSection} />
+      <ContactSection contactSection={data.contactSection} />
+    </div>
   )
 }

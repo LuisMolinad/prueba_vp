@@ -27,7 +27,7 @@ export const requestJson = async <T = EndpointPayload>({
       'Content-Type': 'application/json',
       ...headers,
     },
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+    body: body === undefined ? undefined : JSON.stringify(body),
   })
 
   if (!response.ok) {
@@ -41,6 +41,7 @@ export const requestJson = async <T = EndpointPayload>({
         message = errorData.message
       }
     } catch {
+      // Keep default message when response body is not JSON.
     }
 
     const apiError: ApiError = {
@@ -68,6 +69,27 @@ export const getConfiguredEndpointData = async (): Promise<EndpointPayload> => {
   })
 }
 
+export const getMenuEndpointData = async <T>(): Promise<T> => {
+  return requestJson<T>({
+    endpoint: envConfig.menuData || '/menu',
+    method: 'GET',
+  })
+}
+
+export const getLoginEndpointData = async <T>(): Promise<T> => {
+  return requestJson<T>({
+    endpoint: envConfig.loginData || '/login-content',
+    method: 'GET',
+  })
+}
+
+export const getHomeContentEndpointData = async <T>(): Promise<T> => {
+  return requestJson<T>({
+    endpoint: envConfig.contentData || '/home-content',
+    method: 'GET',
+  })
+}
+
 export const postEndpointData = async (
   endpoint: string,
   data: Record<string, unknown>
@@ -77,4 +99,4 @@ export const postEndpointData = async (
     method: 'POST',
     body: data,
   })
-}
+} 
