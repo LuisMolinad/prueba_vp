@@ -31,10 +31,12 @@ export const requestJson = async <T = EndpointPayload>({
   })
 
   if (!response.ok) {
+    console.error('Error en la solicitud:', response)
     let message = `${response.status} ${response.statusText}`
 
     try {
       const errorData = (await response.json()) as { message?: string }
+      console.error('Error data:', errorData)
       if (errorData.message) {
         message = errorData.message
       }
@@ -55,6 +57,13 @@ export const requestJson = async <T = EndpointPayload>({
 export const getEndpointData = async (endpoint = '/'): Promise<EndpointPayload> => {
   return requestJson<EndpointPayload>({
     endpoint,
+    method: 'GET',
+  })
+}
+
+export const getConfiguredEndpointData = async (): Promise<EndpointPayload> => {
+  return requestJson<EndpointPayload>({
+    endpoint: API_BASE_URL || '/',
     method: 'GET',
   })
 }

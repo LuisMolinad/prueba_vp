@@ -1,9 +1,89 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import type { Resolver } from 'react-hook-form'
 import type { CustomValidatorMap, FieldConfig, FormValues } from '../types/type'
+import { useApiContentStore } from '../store/store'
 import { buildFormSchema, getDefaultValues } from '../utils/validation'
+
+type UnknownRecord = Record<string, unknown>
+
+interface FormContentConfig {
+  title?: string
+  description?: string
+  submitText?: string
+  fields?: Record<string, { label?: string; placeholder?: string }>
+}
+
+const isRecord = (value: unknown): value is UnknownRecord =>
+  typeof value === 'object' && value !== null && !Array.isArray(value)
+
+const getNestedValue = (source: unknown, path: string[]): unknown => {
+  let current: unknown = source
+
+  for (const key of path) {
+    if (!isRecord(current) || !(key in current)) {
+      return undefined
+    }
+
+    current = current[key]
+  }
+
+  return current
+}
+
+const firstString = (source: unknown, paths: string[][]): string | undefined => {
+  for (const path of paths) {
+    const value = getNestedValue(source, path)
+    if (typeof value === 'string' && value.trim()) {
+      return value
+    }
+  }
+
+  return undefined
+}
+
+const extractFormContentConfig = (source: unknown): FormContentConfig => {
+  const containerCandidates = [
+    source,
+    getNestedValue(source, ['form']),
+    getNestedValue(source, ['formulario']),
+    getNestedValue(source, ['content']),
+    getNestedValue(source, ['landing']),
+    getNestedValue(source, ['texts']),
+  ]
+
+  const container = containerCandidates.find((item) => isRecord(item))
+  if (!container || !isRecord(container)) {
+    return {}
+  }
+
+  const fieldsRaw =
+    getNestedValue(container, ['fields']) ??
+    getNestedValue(container, ['campos']) ??
+    getNestedValue(container, ['formFields'])
+
+  let fields: FormContentConfig['fields']
+  if (isRecord(fieldsRaw)) {
+    fields = {}
+
+    for (const [fieldName, value] of Object.entries(fieldsRaw)) {
+      if (!isRecord(value)) continue
+
+      fields[fieldName] = {
+        label: firstString(value, [['label'], ['titulo'], ['title']]),
+        placeholder: firstString(value, [['placeholder'], ['hint'], ['ayuda']]),
+      }
+    }
+  }
+
+  return {
+    title: firstString(container, [['title'], ['titulo'], ['heading']]),
+    description: firstString(container, [['description'], ['descripcion'], ['subtitle']]),
+    submitText: firstString(container, [['submitText'], ['submit'], ['buttonText'], ['cta']]),
+    fields,
+  }
+}
 
 const formFields: FieldConfig[] = [
   {
@@ -63,6 +143,29 @@ const customValidators: CustomValidatorMap = {
 }
 
 export const DynamicForm = () => {
+  const apiData = useApiContentStore((state) => state.data)
+  const fetchContent = useApiContentStore((state) => state.fetchContent)
+
+  useEffect(() => {
+    if (apiData !== null) return
+
+    fetchContent().catch(() => {
+      // Si falla, el formulario mantiene sus textos por defecto.
+    })
+  }, [apiData, fetchContent])
+
+  const contentConfig = useMemo(() => extractFormContentConfig(apiData), [apiData])
+  const fieldsToRender = useMemo(
+    () =>
+      formFields.map((field) => ({
+        ...field,
+        label: contentConfig.fields?.[field.name]?.label ?? field.label,
+        placeholder:
+          contentConfig.fields?.[field.name]?.placeholder ?? field.placeholder,
+      })),
+    [contentConfig.fields]
+  )
+
   const validationSchema = useMemo(
     () => buildFormSchema(formFields, customValidators),
     []
@@ -89,10 +192,10 @@ export const DynamicForm = () => {
     <div className="max-w-2xl mx-auto px-3 md:px-4 py-8">
       <div className="mb-6">
         <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100">
-          Base de Validaciones
+          {contentConfig.title ?? 'Base de Validaciones'}
         </h1>
         <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 mt-2">
-          Las reglas viven en frontend y no dependen de la respuesta del endpoint.
+          {contentConfig.description ?? 'Las reglas viven en frontend y no dependen de la respuesta del endpoint.'}
         </p>
       </div>
 
@@ -100,7 +203,7 @@ export const DynamicForm = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-4 md:p-6"
       >
-        {formFields.map((field) => {
+        {fieldsToRender.map((field) => {
           const fieldError = errors[field.name]?.message
 
           if (field.type === 'checkbox') {
@@ -153,7 +256,7 @@ export const DynamicForm = () => {
           disabled={isSubmitting}
           className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors"
         >
-          {isSubmitting ? 'Enviando...' : 'Validar y enviar'}
+          {isSubmitting ? 'Enviando...' : contentConfig.submitText ?? 'Validar y enviar'}
         </button>
       </form>
     </div>

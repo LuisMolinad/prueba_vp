@@ -27,13 +27,13 @@ export function Navbar() {
             React Base
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* Desktop  */}
           <div className="hidden md:flex items-center gap-4">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 to={link.href}
-                className="transition-colors px-3 py-2 rounded text-gray-700 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-900 dark:hover:bg-white hover:bg-opacity-20"
+                className="transition-colors px-3 py-2 rounded text-gray-700 dark:text-gray-300 hover:text-white dark:hover:text-slate-900 hover:bg-slate-900 dark:hover:bg-white hover:bg-opacity-20"
               >
                 {link.label}
               </Link>
@@ -43,7 +43,7 @@ export function Navbar() {
             </div>
           </div>
 
-          {/* Mobile Menu Button + Theme Toggle */}
+          {/* Menu Button + Theme Toggle */}
           <div className="flex md:hidden items-center gap-3">
             <ThemeToggle />
             <button
@@ -68,7 +68,7 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Sidebar Menu */}
+      {/* Mobile  */}
       {isOpen && (
         <>
           {/* Overlay */}

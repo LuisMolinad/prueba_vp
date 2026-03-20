@@ -1,18 +1,20 @@
-import { useEffect, useState } from 'react'
-import { useEndpointData } from '../utils/useFormConfig'
+import { useEffect } from 'react'
+import { useApiContentStore } from '../store/store'
 
 export function Home() {
-  const [endpoint, setEndpoint] = useState('/')
-  const { data, isLoading, error, load } = useEndpointData(endpoint)
+  const data = useApiContentStore((state) => state.data)
+  const isLoading = useApiContentStore((state) => state.isLoading)
+  const error = useApiContentStore((state) => state.error)
+  const fetchContent = useApiContentStore((state) => state.fetchContent)
 
   useEffect(() => {
-    load().catch(() => {
-      // El mensaje de error se expone desde el hook.
+    fetchContent().catch(() => {
+      // El mensaje de error se expone en el store global.
     })
-  }, [load])
+  }, [fetchContent])
 
   const handleRefresh = async () => {
-    await load()
+    await fetchContent()
   }
 
   return (
@@ -29,13 +31,10 @@ export function Home() {
 
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 md:p-5 shadow-sm">
         <h2 className="font-semibold text-lg mb-3">Prueba de endpoint</h2>
-        <div className="flex flex-col md:flex-row gap-2 md:gap-3">
-          <input
-            value={endpoint}
-            onChange={(event) => setEndpoint(event.target.value)}
-            className="flex-1 border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 md:py-3 dark:bg-slate-700 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-            placeholder="/users o https://api.ejemplo.com/users"
-          />
+        <div className="flex flex-col md:flex-row gap-2 md:gap-3 items-start md:items-center">
+          <p className="text-sm md:text-base text-slate-600 dark:text-slate-300">
+            Consultando endpoint configurado en env-config.ts
+          </p>
           <button
             onClick={handleRefresh}
             disabled={isLoading}
