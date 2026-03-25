@@ -22,10 +22,10 @@ interface ApiContentStore {
 export const useThemeStore = create<ThemeStore>()(
   persist(
     (set) => ({
-      theme: 'dark',
+      theme: 'light',
       toggleTheme: () =>
         set((state) => ({
-          theme: state.theme === 'dark' ? 'light' : 'dark',
+          theme: state.theme === 'light' ? 'light' : 'dark',
         })),
       setTheme: (theme) => set({ theme }),
     }),
